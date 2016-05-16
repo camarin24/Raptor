@@ -4,6 +4,10 @@ Raptor, if you download a track, it set the correct information about the track,
 
 +It works with python 27
 
-INSTALL
-------------
-+Install eyed3 for python
+Instalacion de servidor
+-----------------------
+-   Python 27
+-   Ejecutar get-pip.py
+-   Instalar eyed3
+-   Instalar pytube
+-   Instalar mysqldb
