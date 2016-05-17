@@ -3,19 +3,13 @@
 
 import json, sys, cocomo # PELIGRO -- no borrar ##COCOMO##
 
-# def login():
-# 	__object = _POST	
-# 	__data = cocomo.query("select * from user where email = '"+__object['user']+"' and pass = '"+__object['password']+"'")
-# 	if len(__data) == 0:
-# 		cocomo.printJson("Datos no encontrados", "error")
-# 	else:
-# 		cocomo.printJson(__data, "success")
-
-
 def insertUser():
 	_result = cocomo.query("CALL insertUser ( '" + _POST['id'] + "' )")
 	cocomo.printJson(_result, "success")
 
+def insertFAQ():
+	_result = cocomo.execute("CALL insertFaq ( " + _POST['id_user'] + " , '" + _POST['comentario'] + "' )")
+	cocomo.printJson("Done", "success")
 
 ##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##
 ##

@@ -1,35 +1,65 @@
-$( "#btn_search" ).click(function() {
-	$.ajax({
-			data: {query:$("#txt_query").val()},
-			type: "POST",
-			url: "http://104.214.34.46:1885/raptor/post/track",
-		})
-	 .done(function( data, textStatus, jqXHR ) {
-	 		console.log(data);
-	 		data = (jQuery.parseJSON(data)['data']['data']);
-	 		console.log(data);
-	 		var lon = data.length;
-	 		if (lon === 0) {
-	 			return toastr.error('No se han encontrado resultados para tu búsqueda.')
-	 		}
-	 		var template = '';
-	 		for (var i = 0; i < lon; i++) {
-	 			template += '<div class="row">';
- 				template += '<div class="col-md-1">\
-								<img src="'+data[i]['album']['cover_big']+'" width="80" alt="">\
-							</div>\
-							<div class="col-md 3">\
-								<span><b>'+data[i]['title']+'</b></span><br>\
-								<span>'+data[i]['album']['title']+'</span>\
-								<p class="text-muted"><em>'+data[i]['artist']['name']+'</em></p>\
-							</div>';
-				template += '</div>';
- 			}
-			$("#div_ini").hide();
-			$("#div_result").show();	
- 			$("#div_result")[0].innerHTML = template;	 			
-	 })
-	  .fail(function( jqXHR, textStatus, errorThrown ) {
-		    console.log(jqXHR);
-	});
+//Buscar
+$.ajax({
+		data: {query:"daft punk"},
+		type: "POST",
+		url:  "https://raptor-speakerblack.c9users.io/server/post/track/search",
+	})
+ .done(function( data, textStatus, jqXHR ) {
+ 		console.log(jQuery.parseJSON(data));		
+ })
+  .fail(function( jqXHR, textStatus, errorThrown ) {
+	    console.log(errorThrown);
 });
+
+//Obtener informacion de una cancion
+$.ajax({
+		data: {id:"67238735"},
+		type: "POST",
+		url:  "https://raptor-speakerblack.c9users.io/server/post/track/getInfo",
+	})
+ .done(function( data, textStatus, jqXHR ) {
+ 		console.log(jQuery.parseJSON(data));		
+ })
+  .fail(function( jqXHR, textStatus, errorThrown ) {
+	    console.log(errorThrown);
+});
+
+//Descargar una cancion
+$.ajax({
+		data: {id:"67238735", id_user:"-1"},
+		type: "POST",
+		url:  "https://raptor-speakerblack.c9users.io/server/post/track/download",
+	})
+ .done(function( data, textStatus, jqXHR ) {
+ 		console.log(jQuery.parseJSON(data));		
+ })
+  .fail(function( jqXHR, textStatus, errorThrown ) {
+	    console.log(errorThrown);
+});
+
+//Insertar un usuario
+$.ajax({
+		data: {id:"prueba@prueba.com"}, // Ya existe
+		type: "POST",
+		url:  "https://raptor-speakerblack.c9users.io/server/post/user/insertUser",
+	})
+ .done(function( data, textStatus, jqXHR ) {
+ 		console.log(jQuery.parseJSON(data));		
+ })
+  .fail(function( jqXHR, textStatus, errorThrown ) {
+	    console.log(errorThrown);
+});
+
+//Insertar una FAQ
+$.ajax({
+		data: {id_user:-1,comentario:"Desde el servicio"}, // Ya existe
+		type: "POST",
+		url:  "https://raptor-speakerblack.c9users.io/server/post/user/insertFAQ",
+	})
+ .done(function( data, textStatus, jqXHR ) {
+ 		console.log(jQuery.parseJSON(data));		
+ })
+  .fail(function( jqXHR, textStatus, errorThrown ) {
+	    console.log(errorThrown);
+});
+

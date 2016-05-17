@@ -30,37 +30,41 @@ def getInfo(service=True):
 		return f
 
 def download():
-	###saber si ya existe el archivo en el servidor para no hacer todo el proceso
-	if os.path.exists("audio/"+_POST['id']+"/"):
-		trackName = os.listdir("audio/"+_POST['id']+"/")[0]
-		cocomo.printJson( { "trackURL":"https://vfs-gce-usw-70-4.c9.io/vfs/3145169/9c3ZRL2SiR1rheAO/workspace/server/audio/"+_POST['id']+"/"+trackName.replace(" ", "%20") + "?download&isfile=1" } , "success")
-		return
-
-	track = getInfo(service=False)
-	#track['title']
-	#track['id']
-	#track['position']
-	#track['artist']['name']
-	#track['album']['title']
-	#track['album']['cover_big']
-	youtubeId = getIdByYoutube(track['title'].encode('utf-8') + " - " + track['artist']['name'].encode('utf-8'))
-	downloadFisicalFile(youtubeId, track['id'])
-
-	os.makedirs("audio/"+str(track['id']))
-	import subprocess
-	subprocess.call("wine ffmpeg -i tempvideo/"+str(track['id'])+".mp4 -b:a 192K -vn \"audio/"+str(track['id'])+"/"+track['title']+".mp3\" -loglevel quiet 2>tempvideo/output", shell=True, stdout=subprocess.PIPE)
-	os.remove("tempvideo/"+str(track['id'])+".mp4")
-
-	#descargar imagen
-	getImage(track['album']['cover_big'], str(track['id']))
-	#completar archivo mp3
-	setInfo(track)
-
-	cocomo.printJson({"trackURL":"audio/"+_POST['id']+"/"+track['title']+".mp3"}, "success")
-
+	try:
+		###saber si ya existe el archivo en el servidor para no hacer todo el proceso
+		if os.path.exists("audio/"+_POST['id']+"/"):
+			trackName = os.listdir("audio/"+_POST['id']+"/")[0]
+			cocomo.printJson( { "trackURL":"https://vfs-gce-usw-70-4.c9.io/vfs/3145169/9c3ZRL2SiR1rheAO/workspace/server/audio/"+_POST['id']+"/"+trackName.replace(" ", "%20") + "?download&isfile=1" } , "success")
+			return
+	
+		track = getInfo(service=False)
+		#track['title']
+		#track['id']
+		#track['position']
+		#track['artist']['name']
+		#track['album']['title']
+		#track['album']['cover_big']
+		youtubeId = getIdByYoutube(track['title'].encode('utf-8') + " - " + track['artist']['name'].encode('utf-8'))
+		downloadFisicalFile(youtubeId, track['id'])
+	
+		os.makedirs("audio/"+str(track['id']))
+		import subprocess
+		subprocess.call("wine ffmpeg -i tempvideo/"+str(track['id'])+".mp4 -b:a 192K -vn \"audio/"+str(track['id'])+"/"+track['title']+".mp3\" -loglevel quiet 2>tempvideo/output", shell=True, stdout=subprocess.PIPE)
+		os.remove("tempvideo/"+str(track['id'])+".mp4")
+	
+		#descargar imagen
+		getImage(track['album']['cover_big'], str(track['id']))
+		#completar archivo mp3
+		setInfo(track)
+		
+		cocomo.execute("CALL insertDownload ( " + _POST['id_user'] + " , " + _POST['id'] + " )")
+		
+		cocomo.printJson({"trackURL":"audio/"+_POST['id']+"/"+track['title']+".mp3"}, "success")
+	except:
+		cocomo.printJson("No se puede obtener el archivo descargado", "error")
 
 def getIdByYoutube(searchTerms):
-		url = r"https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + ( searchTerms + " audio oficial" ) + "&type=video&key=AIzaSyAfXxWUUZ1nxII62vg-XR0Shuv_ikuVT2A"
+		url = r"https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + ( searchTerms ) + "&type=video&key=AIzaSyAfXxWUUZ1nxII62vg-XR0Shuv_ikuVT2A"
 		url = url.replace(" ", "+")
 		req = urllib2.Request(url)
 		opener = urllib2.build_opener()

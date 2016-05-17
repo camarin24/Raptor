@@ -1,7 +1,7 @@
 import MySQLdb, json, shutil
 ##import json, shutil
 
-_connection = {"SERVER":"raptor-speakerblack.c9users.io","DATABASE":"raptor","USER":"speakerblack","PASSWORD":""}
+_connection = {"SERVER":"localhost","DATABASE":"raptor","USER":"speakerblack","PASSWORD":""}
 
 _db_ = MySQLdb.connect(_connection['SERVER'],_connection['USER'],_connection['PASSWORD'],_connection['DATABASE'])
 def _getDataBase():
