@@ -52,7 +52,7 @@ $.ajax({
 
 //Insertar una FAQ
 $.ajax({
-		data: {id_user:-1,comentario:"Desde el servicio"}, // Ya existe
+		data: {id_user:-1,comentario:"Desde el servicio"},
 		type: "POST",
 		url:  "https://raptor-speakerblack.c9users.io/server/post/user/insertFAQ",
 	})
@@ -63,3 +63,15 @@ $.ajax({
 	    console.log(errorThrown);
 });
 
+//Obtener la canciones descargadas por el usuario
+$.ajax({
+		data: {id_user:-1},
+		type: "POST",
+		url:  "https://raptor-speakerblack.c9users.io/server/post/user/getDownloadUser",
+	})
+ .done(function( data, textStatus, jqXHR ) {
+ 		console.log(jQuery.parseJSON(data));		
+ })
+  .fail(function( jqXHR, textStatus, errorThrown ) {
+	    console.log(errorThrown);
+});

@@ -10,6 +10,10 @@ def insertUser():
 def insertFAQ():
 	_result = cocomo.execute("CALL insertFaq ( " + _POST['id_user'] + " , '" + _POST['comentario'] + "' )")
 	cocomo.printJson("Done", "success")
+	
+def getDownloadUser():
+	_result = cocomo.query("CALL getDownloaUser ( " + _POST['id_user'] + " )")
+	cocomo.printJson(_result, "success")
 
 ##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##
 ##
