@@ -75,3 +75,16 @@ $.ajax({
   .fail(function( jqXHR, textStatus, errorThrown ) {
 	    console.log(errorThrown);
 });
+
+//Obtener sugerencias
+$.ajax({
+		data: {id_user:"-1"},
+		type: "POST",
+		url:  "https://raptor-speakerblack.c9users.io/server/post/track/getSuggested",
+	})
+ .done(function( data, textStatus, jqXHR ) {
+ 		console.log(jQuery.parseJSON(data));		
+ })
+  .fail(function( jqXHR, textStatus, errorThrown ) {
+	    console.log(errorThrown);
+});
