@@ -3,17 +3,19 @@
 
 import json, sys, cocomo # PELIGRO -- no borrar ##COCOMO##
 
+
 def insertUser():
 	_result = cocomo.query("CALL insertUser ( '" + _POST['id'] + "' )")
 	cocomo.printJson(_result, "success")
 
 def insertFAQ():
-	_result = cocomo.execute("CALL insertFaq ( " + _POST['id_user'] + " , '" + _POST['comentario'] + "' )")
+	cocomo.execute("CALL insertFaq ( " + _POST['id_user'] + " , '" + _POST['comentario'] + "' )")
 	cocomo.printJson("Done", "success")
 	
 def getDownloadUser():
 	_result = cocomo.query("CALL getDownloaUser ( " + _POST['id_user'] + " )")
 	cocomo.printJson(_result, "success")
+	
 
 ##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##
 ##

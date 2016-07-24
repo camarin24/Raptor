@@ -105,15 +105,14 @@ def setInfo(track):
 def getImage(url, idname):
 	import urllib
 	urllib.urlretrieve(url, "audio/"+str(idname)+"/"+str(idname)+".jpg")
-	
+
 def getSuggested():
 	_POST['id'] = cocomo.query("CALL getLastDownload (" + _POST['id_user'] + ")")[0][0]
 	id_artist = getInfo(False)['artist']['id']
 	url = "http://api.deezer.com/artist/" + str(id_artist) + "/top"
 	f = urllib2.urlopen(url)
 	f = json.loads(f.read())
-	cocomo.printJson(f, "success") 
-
+	cocomo.printJson(f, "success")
 
 ##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##
 ##
