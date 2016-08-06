@@ -1,7 +1,7 @@
 import MySQLdb, json, shutil
 ##import json, shutil
 
-_connection = {"SERVER":"localhost","DATABASE":"raptor","USER":"speakerblack","PASSWORD":""}
+_connection = {"SERVER":"localhost","DATABASE":"raptor","USER":"root","PASSWORD":""}
 _db_ = MySQLdb.connect(_connection['SERVER'],_connection['USER'],_connection['PASSWORD'],_connection['DATABASE'])
 
 def _getDataBase():
@@ -24,7 +24,8 @@ def execute(sql):
 	_close()
 
 def printJson(__object, status):
-	print json.dumps({"status":status,"data":__object})
+	if __object is not None:
+		print json.dumps({"status":status,"data":__object})	
 
 def moveUploadedFile(src,dest):
 	shutil.move(src, dest)

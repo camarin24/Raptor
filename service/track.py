@@ -14,16 +14,11 @@ from pytube import YouTube
 # 		cocomo.printJson(__data, "success")
 
 def search():
-	query = _POST['query']
-	url = "http://api.deezer.com/search?q=" + query.replace(" ", "%20")
-	f = urllib2.urlopen(url)
-	f = json.loads(f.read())
-	cocomo.printJson(f, "success")
+	query = _POST['query'].replace(" ", "%20")
+	cocomo.printJson ( smartGet ( "http://api.deezer.com/search?q=" + query ) , "success" )
 
 def getInfo(service=True):
-	url = "http://api.deezer.com/track/" + str(_POST['id'])
-	f = urllib2.urlopen(url)
-	f = json.loads(f.read())
+	f = smartGet( "http://api.deezer.com/track/" + str ( _POST['id'] ) , service )
 	if service:
 		cocomo.printJson(f, "success")
 	else:
@@ -32,12 +27,13 @@ def getInfo(service=True):
 def download():
 	try:
 		###saber si ya existe el archivo en el servidor para no hacer todo el proceso
-		if os.path.exists("audio/"+_POST['id']+"/"):
-			trackName = os.listdir("audio/"+_POST['id']+"/")[0]
-			cocomo.printJson( { "trackURL":"https://vfs-gce-usw-70-4.c9.io/vfs/3145169/9c3ZRL2SiR1rheAO/workspace/server/audio/"+_POST['id']+"/"+trackName.replace(" ", "%20") + "?download&isfile=1" } , "success")
+		if os.path.exists("../audio/"+_POST['id']+"/"):
+			trackName = os.listdir("../audio/"+_POST['id']+"/")[0]
+			cocomo.printJson( { "trackURL":"audio/"+_POST['id']+"/"+trackName.replace(" ", "%20") } , "success")
 			return
 	
 		track = getInfo(service=False)
+		##Recordatorio de la estrutura del json
 		#track['title']
 		#track['id']
 		#track['position']
@@ -47,9 +43,9 @@ def download():
 		youtubeId = getIdByYoutube(track['title'].encode('utf-8') + " - " + track['artist']['name'].encode('utf-8'))
 		downloadFisicalFile(youtubeId, track['id'])
 	
-		os.makedirs("audio/"+str(track['id']))
+		os.makedirs("../audio/"+str(track['id']))
 		import subprocess
-		subprocess.call("wine ffmpeg -i tempvideo/"+str(track['id'])+".mp4 -b:a 192K -vn \"audio/"+str(track['id'])+"/"+track['title']+".mp3\" -loglevel quiet 2>tempvideo/output", shell=True, stdout=subprocess.PIPE)
+		subprocess.call("ffmpeg -i tempvideo/"+str(track['id'])+".mp4 -b:a 192K -vn \"../audio/"+str(track['id'])+"/"+track['title']+".mp3\" -loglevel quiet 2>tempvideo/output", shell=True, stdout=subprocess.PIPE)
 		os.remove("tempvideo/"+str(track['id'])+".mp4")
 	
 		#descargar imagen
@@ -59,7 +55,7 @@ def download():
 		
 		cocomo.execute("CALL insertDownload ( " + _POST['id_user'] + " , " + _POST['id'] + " )")
 		
-		cocomo.printJson({"trackURL":"audio/"+_POST['id']+"/"+track['title']+".mp3"}, "success")
+		cocomo.printJson({"trackURL":"../audio/"+_POST['id']+"/"+track['title']+".mp3"}, "success")
 	except Exception, ex:
 		cocomo.printJson("No se puede obtener el archivo descargado, El motor dice: " + str(ex), "error")
 
@@ -90,29 +86,43 @@ def downloadFisicalFile(youtubeId, idName):
 	#cocomo.printJson(yt.videos, "test")
 
 def setInfo(track):
-	audiofile = eyed3.load("audio/"+str(track["id"])+"/"+track["title"]+".mp3")
+	audiofile = eyed3.load("../audio/"+str(track["id"])+"/"+track["title"]+".mp3")
 	audiofile.tag.artist = track['artist']['name']
 	audiofile.tag.album = track['album']['title']
 	audiofile.tag.album_artist = track['artist']['name']
 	audiofile.tag.title = track['title']
 	audiofile.tag.track_num = int(track['track_position'])
-	imagedata = open("audio/"+str(track['id'])+"/"+str(track['id'])+".jpg","rb").read()
+	imagedata = open("../audio/"+str(track['id'])+"/"+str(track['id'])+".jpg","rb").read()
 	audiofile.tag.images.set(3,imagedata,"image/jpeg",u"By Raptor")
 	audiofile.tag.save()
-	os.remove("audio/"+str(track['id'])+"/"+str(track['id'])+".jpg")
+	os.remove("../audio/"+str(track['id'])+"/"+str(track['id'])+".jpg")
 
 
 def getImage(url, idname):
 	import urllib
-	urllib.urlretrieve(url, "audio/"+str(idname)+"/"+str(idname)+".jpg")
+	urllib.urlretrieve(url, "../audio/"+str(idname)+"/"+str(idname)+".jpg")
 
 def getSuggested():
 	_POST['id'] = cocomo.query("CALL getLastDownload (" + _POST['id_user'] + ")")[0][0]
 	id_artist = getInfo(False)['artist']['id']
-	url = "http://api.deezer.com/artist/" + str(id_artist) + "/top"
-	f = urllib2.urlopen(url)
-	f = json.loads(f.read())
-	cocomo.printJson(f, "success")
+	cocomo.printJson( smartGet( "http://api.deezer.com/artist/" + str ( id_artist ) + "/top" ) , "success")
+
+def smartGet( url, service=True ):
+	cache = cocomo.query("CALL getCache ( '" + url + "' )")
+	n = len(cache)
+	if n != 0:
+		if service:
+			cocomo.printJson( json.loads( cache[0][0].decode("hex") ) , "success" )
+			return
+		else:
+			return json.loads( cache[0][0].decode("hex") )
+	else:
+		f = urllib2.urlopen(url)
+		f = json.loads(f.read())
+		cocomo.execute("CALL setCache ( '" + url + "', '" + json.dumps(f).encode("hex") + "' )")
+		return f
+		
+
 
 ##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##
 ##

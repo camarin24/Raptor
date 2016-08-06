@@ -5,7 +5,7 @@ import json, sys, cocomo # PELIGRO -- no borrar ##COCOMO##
 
 
 def insertUser():
-	_result = cocomo.query("CALL insertUser ( '" + _POST['id'] + "' )")
+	_result = cocomo.execute("CALL insertUser ( '" + _POST['id'] + "' )")
 	cocomo.printJson(_result, "success")
 
 def insertFAQ():
