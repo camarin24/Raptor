@@ -49,11 +49,11 @@ def download():
 		os.remove("tempvideo/"+str(track['id'])+".mp4")
 	
 		#descargar imagen
-		getImage(track['album']['cover_big'], str(track['id']))
+		#getImage(track['album']['cover'], str(track['id']))
 		#completar archivo mp3
 		setInfo(track)
 		
-		cocomo.execute("CALL insertDownload ( " + _POST['id_user'] + " , " + _POST['id'] + " )")
+		#cocomo.execute("CALL insertDownload ( '" + _POST['id_user'] + "' , '" + _POST['id'] + "' )")
 		
 		cocomo.printJson({"trackURL":"../audio/"+_POST['id']+"/"+track['title']+".mp3"}, "success")
 	except Exception, ex:
@@ -92,10 +92,10 @@ def setInfo(track):
 	audiofile.tag.album_artist = track['artist']['name']
 	audiofile.tag.title = track['title']
 	audiofile.tag.track_num = int(track['track_position'])
-	imagedata = open("../audio/"+str(track['id'])+"/"+str(track['id'])+".jpg","rb").read()
-	audiofile.tag.images.set(3,imagedata,"image/jpeg",u"By Raptor")
+	#imagedata = open("../audio/"+str(track['id'])+"/"+str(track['id'])+".jpg","rb").read()
+	#audiofile.tag.images.set(3,imagedata,"image/jpeg",u"By Raptor")
 	audiofile.tag.save()
-	os.remove("../audio/"+str(track['id'])+"/"+str(track['id'])+".jpg")
+	#os.remove("../audio/"+str(track['id'])+"/"+str(track['id'])+".jpg")
 
 
 def getImage(url, idname):
