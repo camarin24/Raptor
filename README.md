@@ -6,7 +6,7 @@ Raptor, if you download a track, it set the correct information about the track,
 Instalacion de servidor
 -----------------------
 -   Python 27
--   Ejecutar get-pip.py
+-   Ejecutar get-pip.py ( <At folder Raptor> python service/get-pip.py  )
 -   Instalar eyed3 ( python -m pip install eyeD3 )
 -   Instalar pytube ( python -m pip install pytube )
 -   Instalar mysqldb ( python -m pip install mysqldb )
