@@ -7,6 +7,6 @@ Instalacion de servidor
 -----------------------
 -   Python 27
 -   Ejecutar get-pip.py
--   Instalar eyed3
--   Instalar pytube
--   Instalar mysqldb
+-   Instalar eyed3 ( python -m pip install eyeD3 )
+-   Instalar pytube ( python -m pip install pytube )
+-   Instalar mysqldb ( python -m pip install mysqldb )
