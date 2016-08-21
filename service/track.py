@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json, sys, cocomo # PELIGRO -- no borrar ##COCOMO##
-import urllib2, os, eyed3
+import urllib2, os, eyed3, random
 from pytube import YouTube 
 
 # def login():
@@ -103,23 +103,34 @@ def getImage(url, idname):
 	urllib.urlretrieve(url, "../audio/"+str(idname)+"/"+str(idname)+".jpg")
 
 def getSuggested():
-	_POST['id'] = cocomo.query("CALL getLastDownload (" + _POST['id_user'] + ")")[0][0]
-	id_artist = getInfo(False)['artist']['id']
-	cocomo.printJson( smartGet( "http://api.deezer.com/artist/" + str ( id_artist ) + "/top" ) , "success")
+	# _POST['id'] = cocomo.query("CALL getLastDownload (" + _POST['id_user'] + ")")[0][0]
+	# id_artist = getInfo(False)['artist']['id']
+	# cocomo.printJson( smartGet( "http://api.deezer.com/artist/" + str ( id_artist ) + "/top" ) , "success")
+	h = smartGet( "http://api.deezer.com/radio" , False )
+	r = random.randrange(10)
+	h = h['data'][r]['id']
+	smartGet( "https://api.deezer.com/radio/" + str ( h ) + "/tracks" )
 
 def smartGet( url, service=True ):
-	cache = cocomo.query("CALL getCache ( '" + url + "' )")
-	n = len(cache)
-	if n != 0:
-		if service:
-			cocomo.printJson( json.loads( cache[0][0].decode("hex") ) , "success" )
-			return
-		else:
-			return json.loads( cache[0][0].decode("hex") )
+	# cache = cocomo.query("CALL getCache ( '" + url + "' )")
+	# n = len(cache)
+	# if n != 0:
+	# 	if service:
+	# 		cocomo.printJson( json.loads( cache[0][0].decode("hex") ) , "success" )
+	# 		return
+	# 	else:
+	# 		return json.loads( cache[0][0].decode("hex") )
+	# else:
+	# 	f = urllib2.urlopen(url)
+	# 	f = json.loads(f.read())
+	# 	cocomo.execute("CALL setCache ( '" + url + "', '" + json.dumps(f).encode("hex") + "' )")
+	# 	return f
+	f = urllib2.urlopen(url)
+	f = json.loads(f.read())
+	if service:
+		cocomo.printJson( f , "success" )
+		return
 	else:
-		f = urllib2.urlopen(url)
-		f = json.loads(f.read())
-		cocomo.execute("CALL setCache ( '" + url + "', '" + json.dumps(f).encode("hex") + "' )")
 		return f
 		
 
