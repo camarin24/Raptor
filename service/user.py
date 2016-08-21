@@ -6,15 +6,15 @@ import json, sys, cocomo # PELIGRO -- no borrar ##COCOMO##
 
 def insertUser():
 	cocomo.execute("CALL insertUser ( '" + _POST['id'] + "' )")
-	cocomo.printJson("Done", "success")
+	cocomo.printJson("[user.py>insertUser()]", "success")
 
 def insertFAQ():
 	cocomo.execute("CALL insertFaq ( " + _POST['id_user'] + " , '" + _POST['comentario'] + "' )")
-	cocomo.printJson("Done", "success")
+	cocomo.printJson("[user.py>insertFAQ()]", "success")
 	
 def getDownloadUser():
 	_result = cocomo.query("CALL getDownloaUser ( " + _POST['id_user'] + " )")
-	cocomo.printJson("_result", "success")
+	cocomo.printJson(_result, "success")
 	
 
 ##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##
