@@ -13,6 +13,10 @@ def listByUser():
 	r = cocomo.query("SELECT id_playlist , nombre FROM playlist WHERE id_user = '" + _POST['id'] + "'")
 	cocomo.printJson(r, "success")
 
+def listItems():
+	r = cocomo.query("SELECT CONCAT('[',CONCAT(GROUP_CONCAT(REPLACE(track_json,\";\",'\"')),']')) FROM track_playlist WHERE id_playlist = '" + _POST['id'] + "'")
+	cocomo.printJson(r, "success")
+
 ##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##COCOMO##
 ##
 ## Por favor, no borrar este codigo
