@@ -9,4 +9,4 @@ Instalacion de servidor
 -   Ejecutar get-pip.py ( <At folder Raptor> python service/get-pip.py  )
 -   Instalar eyed3 ( python -m pip install eyeD3 )
 -   Instalar pytube ( python -m pip install pytube )
--   Instalar mysqldb ( python -m pip install mysqldb )
+-   Instalar mysqldb ( python -m pip install mysqlclient )
